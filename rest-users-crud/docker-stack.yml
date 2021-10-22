@@ -1,0 +1,37 @@
+version: "3"
+services:
+  app-back:
+    image: 127.0.0.1:5000/backend-users-go
+    networks:
+      - mongo-go
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+  mongodb:
+    image: brunaobh/mongodb
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - mongo-go
+    ports:
+      - 27017:27017
+      - 28017:28017
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+networks:
+  mongo-go:
+volumes:
+  mongodb-data:
